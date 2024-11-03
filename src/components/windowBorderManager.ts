@@ -3,6 +3,7 @@ import SignalHandling from '@utils/signalHandling';
 import { logger } from '@utils/logger';
 import { registerGObjectClass } from '@utils/gjs';
 import Settings from '@settings/settings';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 const debug = logger('WindowBorderManager');
 

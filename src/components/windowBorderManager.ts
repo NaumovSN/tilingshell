@@ -136,7 +136,7 @@ class WindowBorder extends St.Bin {
 
     public updateStyle(): void {
         this.set_style(
-            `border-color: ${Settings.get_window_border_color()}; border-width: ${Settings.get_window_border_width()}px;`,
+            `border-color: ${Settings.WINDOW_BORDER_COLOR.value}; border-width: ${Settings.WINDOW_BORDER_WIDTH.value}px;`,
         );
     }
 
@@ -169,14 +169,14 @@ export class WindowBorderManager {
     }
 
     public enable(): void {
-        if (Settings.get_enable_window_border()) this._turnOn();
+        if (Settings.ENABLE_WINDOW_BORDER.value) this._turnOn();
 
         // enable/disable based on user preferences
         this._signals.connect(
             Settings,
-            Settings.SETTING_ENABLE_WINDOW_BORDER,
+            Settings.ENABLE_WINDOW_BORDER.name,
             () => {
-                if (Settings.get_enable_window_border()) this._turnOn();
+                if (Settings.ENABLE_WINDOW_BORDER.value) this._turnOn();
                 else this._turnOff();
             },
         );
@@ -191,7 +191,7 @@ export class WindowBorderManager {
         );
         this._signals.connect(
             Settings,
-            Settings.SETTING_WINDOW_BORDER_COLOR,
+            Settings.WINDOW_BORDER_COLOR.name,
             () => {
                 this._border?.updateStyle();
             },
@@ -199,7 +199,7 @@ export class WindowBorderManager {
 
         this._signals.connect(
             Settings,
-            Settings.SETTING_WINDOW_BORDER_WIDTH,
+            Settings.WINDOW_BORDER_WIDTH.name,
             () => {
                 this._border?.updateStyle();
             },

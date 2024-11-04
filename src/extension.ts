@@ -51,14 +51,14 @@ export default class TilingShellExtension extends Extension {
     }
 
     private _validateSettings() {
-        if (Settings.get_last_version_installed() === '14.0') {
+        if (Settings.LAST_VERSION_NAME_INSTALLED.value === '14.0') {
             debug('apply compatibility changes');
             Settings.save_selected_layouts([]);
         }
 
         // Setting used for compatibility changes if necessary
         if (this.metadata['version-name']) {
-            Settings.set_last_version_installed(
+            Settings.LAST_VERSION_NAME_INSTALLED.update(
                 this.metadata['version-name'] || '0',
             );
         }
@@ -82,7 +82,7 @@ export default class TilingShellExtension extends Extension {
         this._keybindings = new KeyBindings(this.getSettings());
 
         // disable native edge tiling
-        if (Settings.get_active_screen_edges()) {
+        if (Settings.ACTIVE_SCREEN_EDGES.value) {
             SettingsOverride.get().override(
                 new Gio.Settings({ schema_id: 'org.gnome.mutter' }),
                 'edge-tiling',
@@ -117,7 +117,7 @@ export default class TilingShellExtension extends Extension {
         this._dbus = new DBus();
         this._dbus.enable(this);
 
-        if (Settings.get_override_window_menu()) OverriddenWindowMenu.enable();
+        if (Settings.OVERRIDE_WINDOW_MENU.value) OverriddenWindowMenu.enable();
 
         debug('extension is enabled');
     }
@@ -242,12 +242,12 @@ export default class TilingShellExtension extends Extension {
         // then enable/disable native edge-tiling
         this._signals.connect(
             Settings,
-            Settings.SETTING_ACTIVE_SCREEN_EDGES,
+            Settings.ACTIVE_SCREEN_EDGES.name,
             () => {
                 const gioSettings = new Gio.Settings({
                     schema_id: 'org.gnome.mutter',
                 });
-                if (Settings.get_active_screen_edges()) {
+                if (Settings.ACTIVE_SCREEN_EDGES.value) {
                     debug('disable native edge tiling');
                     // disable native edge tiling
                     SettingsOverride.get().override(
@@ -269,9 +269,9 @@ export default class TilingShellExtension extends Extension {
         // enable/disable window menu from preferences
         this._signals.connect(
             Settings,
-            Settings.SETTING_OVERRIDE_WINDOW_MENU,
+            Settings.OVERRIDE_WINDOW_MENU.name,
             () => {
-                if (Settings.get_override_window_menu())
+                if (Settings.OVERRIDE_WINDOW_MENU.value)
                     OverriddenWindowMenu.enable();
                 else OverriddenWindowMenu.disable();
             },

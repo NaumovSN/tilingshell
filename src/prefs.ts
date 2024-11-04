@@ -1,5 +1,10 @@
 import { Gtk, Adw, Gio, GLib, Gdk, GObject } from '@gi.prefs';
-import Settings, { ActivationKey } from './settings/settings';
+import Settings, {
+    ActivationKey,
+    ActivationKeySetting,
+    BooleanSetting,
+    NumberSetting,
+} from './settings/settings';
 import { logger } from './utils/logger';
 import { ExtensionPreferences } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 import Layout from '@components/layout/Layout';
@@ -54,21 +59,21 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
         prefsPage.add(appearenceGroup);
 
         const showIndicatorRow = this._buildSwitchRow(
-            Settings.SETTING_SHOW_INDICATOR,
+            Settings.SHOW_INDICATOR,
             _('Show Indicator'),
             _('Whether to show the panel indicator'),
         );
         appearenceGroup.add(showIndicatorRow);
 
         const innerGapsRow = this._buildSpinButtonRow(
-            Settings.SETTING_INNER_GAPS,
+            Settings.INNER_GAPS,
             _('Inner gaps'),
             _('Gaps between windows'),
         );
         appearenceGroup.add(innerGapsRow);
 
         const outerGapsRow = this._buildSpinButtonRow(
-            Settings.SETTING_OUTER_GAPS,
+            Settings.OUTER_GAPS,
             _('Outer gaps'),
             _('Gaps between a window and the monitor borders'),
         );
@@ -83,7 +88,7 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
         appearenceGroup.add(blurRow);
 
         const snapAssistantThresholdRow = this._buildSpinButtonRow(
-            Settings.SETTING_SNAP_ASSISTANT_THRESHOLD,
+            Settings.SNAP_ASSISTANT_THRESHOLD,
             _('Snap Assistant threshold'),
             _(
                 'Minimum distance from the Snap Assistant to the pointer to open it',
@@ -95,14 +100,14 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
 
         blurRow.add_row(
             this._buildSwitchRow(
-                Settings.SETTING_ENABLE_BLUR_SNAP_ASSISTANT,
+                Settings.ENABLE_BLUR_SNAP_ASSISTANT,
                 _('Snap Assistant'),
                 _('Apply blur effect to Snap Assistant'),
             ),
         );
         blurRow.add_row(
             this._buildSwitchRow(
-                Settings.SETTING_ENABLE_BLUR_SELECTED_TILEPREVIEW,
+                Settings.ENABLE_BLUR_SELECTED_TILEPREVIEW,
                 _('Selected tile preview'),
                 _('Apply blur effect to selected tile preview'),
             ),
@@ -115,14 +120,14 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
         appearenceGroup.add(windowBorderRow);
         windowBorderRow.add_row(
             this._buildSwitchRow(
-                Settings.SETTING_ENABLE_WINDOW_BORDER,
+                Settings.ENABLE_WINDOW_BORDER,
                 _('Enable'),
                 _('Show a border around focused window'),
             ),
         );
         windowBorderRow.add_row(
             this._buildSpinButtonRow(
-                Settings.SETTING_WINDOW_BORDER_WIDTH,
+                Settings.WINDOW_BORDER_WIDTH,
                 _('Width'),
                 _('The size of the border'),
                 1,
@@ -132,8 +137,8 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
             this._buildColorRow(
                 _('Border color'),
                 _('Choose the color of the border'),
-                this._getRGBAFromString(Settings.get_window_border_color()),
-                (val: string) => Settings.set_window_border_color(val),
+                this._getRGBAFromString(Settings.WINDOW_BORDER_COLOR.value),
+                (val: string) => Settings.WINDOW_BORDER_COLOR.update(val),
             ),
         );
 
@@ -144,7 +149,7 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
         appearenceGroup.add(animationsRow);
         animationsRow.add_row(
             this._buildSpinButtonRow(
-                Settings.SETTING_SNAP_ASSISTANT_ANIMATION_TIME,
+                Settings.SNAP_ASSISTANT_ANIMATION_TIME,
                 _('Snap assistant animation time'),
                 _('The snap assistant animation time in milliseconds'),
                 0,
@@ -153,7 +158,7 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
         );
         animationsRow.add_row(
             this._buildSpinButtonRow(
-                Settings.SETTING_TILE_PREVIEW_ANIMATION_TIME,
+                Settings.TILE_PREVIEW_ANIMATION_TIME,
                 _('Tiles animation time'),
                 _('The tiles animation time in milliseconds'),
                 0,
@@ -169,20 +174,18 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
         prefsPage.add(behaviourGroup);
 
         const snapAssistRow = this._buildSwitchRow(
-            Settings.SETTING_SNAP_ASSIST,
+            Settings.SNAP_ASSIST,
             _('Enable Snap Assistant'),
             _('Move the window on top of the screen to snap assist it'),
         );
         behaviourGroup.add(snapAssistRow);
 
         const enableTilingSystemRow = this._buildSwitchRow(
-            Settings.SETTING_TILING_SYSTEM,
+            Settings.TILING_SYSTEM,
             _('Enable Tiling System'),
             _('Hold the activation key while moving a window to tile it'),
             this._buildActivationKeysDropDown(
-                Settings.get_tiling_system_activation_key(),
-                (newVal: ActivationKey) =>
-                    Settings.set_tiling_system_activation_key(newVal),
+                Settings.TILING_SYSTEM_ACTIVATION_KEY,
             ),
         );
         behaviourGroup.add(enableTilingSystemRow);
@@ -192,33 +195,29 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
             _(
                 'Hold the deactivation key while moving a window to deactivate the tiling system',
             ),
-            Settings.get_tiling_system_deactivation_key(),
-            (newVal: ActivationKey) =>
-                Settings.set_tiling_system_deactivation_key(newVal),
+            Settings.TILING_SYSTEM_DEACTIVATION_KEY,
         );
         behaviourGroup.add(tilingSystemDeactivationRow);
 
         const spanMultipleTilesRow = this._buildSwitchRow(
-            Settings.SETTING_SPAN_MULTIPLE_TILES,
+            Settings.SPAN_MULTIPLE_TILES,
             _('Span multiple tiles'),
             _('Hold the activation key to span multiple tiles'),
             this._buildActivationKeysDropDown(
-                Settings.get_span_multiple_tiles_activation_key(),
-                (newVal: ActivationKey) =>
-                    Settings.set_span_multiple_tiles_activation_key(newVal),
+                Settings.SPAN_MULTIPLE_TILES_ACTIVATION_KEY,
             ),
         );
         behaviourGroup.add(spanMultipleTilesRow);
 
-        /* const autoTilingRow = this._buildSwitchRow(
-            Settings.SETTING_ENABLE_AUTO_TILING,
+        const autoTilingRow = this._buildSwitchRow(
+            Settings.ENABLE_AUTO_TILING,
             _('Enable Auto Tiling'),
             _('Automatically tile new windows to the best tile'),
         );
-        behaviourGroup.add(autoTilingRow);*/
+        behaviourGroup.add(autoTilingRow);
 
         const resizeComplementingRow = this._buildSwitchRow(
-            Settings.SETTING_RESIZE_COMPLEMENTING_WINDOWS,
+            Settings.RESIZE_COMPLEMENTING_WINDOWS,
             _('Enable auto-resize of the complementing tiled windows'),
             _(
                 'When a tiled window is resized, auto-resize the other tiled windows near it',
@@ -227,7 +226,7 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
         behaviourGroup.add(resizeComplementingRow);
 
         const restoreToOriginalSizeRow = this._buildSwitchRow(
-            Settings.SETTING_RESTORE_WINDOW_ORIGINAL_SIZE,
+            Settings.RESTORE_WINDOW_ORIGINAL_SIZE,
             _('Restore window size'),
             _(
                 'Whether to restore the windows to their original size when untiled',
@@ -236,7 +235,7 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
         behaviourGroup.add(restoreToOriginalSizeRow);
 
         const overrideWindowMenuRow = this._buildSwitchRow(
-            Settings.SETTING_OVERRIDE_WINDOW_MENU,
+            Settings.OVERRIDE_WINDOW_MENU,
             _('Add snap assistant and auto-tile buttons to window menu'),
             _(
                 'Add snap assistant and auto-tile buttons in the menu that shows up when you right click on a window title',
@@ -256,18 +255,18 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
             }),
         });
         Settings.bind(
-            Settings.SETTING_ACTIVE_SCREEN_EDGES,
+            Settings.ACTIVE_SCREEN_EDGES,
             activeScreenEdgesGroup.headerSuffix,
             'active',
         );
 
         const topEdgeMaximize = this._buildSwitchRow(
-            Settings.SETTING_TOP_EDGE_MAXIMIZE,
+            Settings.TOP_EDGE_MAXIMIZE,
             _('Drag against top edge to maximize window'),
             _('Drag windows against the top edge to maximize them'),
         );
         Settings.bind(
-            Settings.SETTING_ACTIVE_SCREEN_EDGES,
+            Settings.ACTIVE_SCREEN_EDGES,
             topEdgeMaximize,
             'sensitive',
         );
@@ -277,18 +276,14 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
             _('Quarter tiling activation area'),
             _('Activation area to trigger quarter tiling (% of the screen)'),
             (sc: Gtk.Scale) => {
-                Settings.set_quarter_tiling_threshold(sc.get_value());
+                Settings.QUARTER_TILING_THRESHOLD.update(sc.get_value());
             },
-            Settings.get_quarter_tiling_threshold(),
+            Settings.QUARTER_TILING_THRESHOLD.value,
             1,
             50,
             1,
         );
-        Settings.bind(
-            Settings.SETTING_ACTIVE_SCREEN_EDGES,
-            quarterTiling,
-            'sensitive',
-        );
+        Settings.bind(Settings.ACTIVE_SCREEN_EDGES, quarterTiling, 'sensitive');
         activeScreenEdgesGroup.add(quarterTiling);
 
         prefsPage.add(activeScreenEdgesGroup);
@@ -460,7 +455,7 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
             }),
         });
         Settings.bind(
-            Settings.SETTING_ENABLE_MOVE_KEYBINDINGS,
+            Settings.ENABLE_MOVE_KEYBINDINGS,
             keybindingsGroup.headerSuffix,
             'active',
         );
@@ -602,7 +597,7 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
                 );
 
                 Settings.bind(
-                    Settings.SETTING_ENABLE_MOVE_KEYBINDINGS,
+                    Settings.ENABLE_MOVE_KEYBINDINGS,
                     row,
                     'sensitive',
                 );
@@ -620,7 +615,7 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
             }),
         );
         Settings.bind(
-            Settings.SETTING_ENABLE_MOVE_KEYBINDINGS,
+            Settings.ENABLE_MOVE_KEYBINDINGS,
             openKeybindingsDialogRow,
             'sensitive',
         );
@@ -655,11 +650,7 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
                 subtitle,
             );
 
-            Settings.bind(
-                Settings.SETTING_ENABLE_MOVE_KEYBINDINGS,
-                row,
-                'sensitive',
-            );
+            Settings.bind(Settings.ENABLE_MOVE_KEYBINDINGS, row, 'sensitive');
             keybindingsDialogGroup.add(row);
         });
 
@@ -856,7 +847,7 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
     }
 
     _buildSwitchRow(
-        settingsKey: string,
+        settingsKey: BooleanSetting,
         title: string,
         subtitle: string,
         suffix?: Gtk.Widget,
@@ -880,13 +871,11 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
     _buildDropDownRow(
         title: string,
         subtitle: string,
-        value: ActivationKey,
-        onSelected: (v: ActivationKey) => void,
+        settingKey: ActivationKeySetting,
         styleClass?: string,
     ): Adw.ActionRow {
         const dropDown = this._buildActivationKeysDropDown(
-            value,
-            onSelected,
+            settingKey,
             styleClass,
         );
         dropDown.set_vexpand(false);
@@ -902,7 +891,7 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
     }
 
     _buildSpinButtonRow(
-        settingsKey: string,
+        settingsKey: NumberSetting,
         title: string,
         subtitle: string,
         min = 0,
@@ -965,8 +954,7 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
     }
 
     _buildActivationKeysDropDown(
-        value: ActivationKey,
-        onSelected: (v: ActivationKey) => void,
+        settingKey: ActivationKeySetting,
         styleClass?: string,
     ) {
         const options = new Gtk.StringList();
@@ -979,7 +967,7 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
         options.append('(None)');
         const dropdown = new Gtk.DropDown({
             model: options,
-            selected: value,
+            selected: settingKey.value,
         });
         dropdown.connect('notify::selected-item', (dd: Gtk.DropDown) => {
             const index = dd.get_selected();
@@ -987,7 +975,7 @@ export default class TilingShellExtensionPreferences extends ExtensionPreference
                 index < 0 || index >= activationKeys.length
                     ? ActivationKey.NONE
                     : activationKeys[index];
-            onSelected(selected);
+            settingKey.update(selected);
         });
         if (styleClass) dropdown.add_css_class(styleClass);
         dropdown.set_vexpand(false);

@@ -156,13 +156,13 @@ export class TilingManager {
             },
         );
 
-        this._signals.connect(Settings, Settings.SETTING_INNER_GAPS, () => {
+        this._signals.connect(Settings, Settings.INNER_GAPS.name, () => {
             const innerGaps = buildMargin(Settings.get_inner_gaps());
             this._workspaceTilingLayout.forEach((tilingLayout) =>
                 tilingLayout.relayout({ innerGaps }),
             );
         });
-        this._signals.connect(Settings, Settings.SETTING_OUTER_GAPS, () => {
+        this._signals.connect(Settings, Settings.OUTER_GAPS.name, () => {
             const outerGaps = buildMargin(Settings.get_outer_gaps());
             this._workspaceTilingLayout.forEach((tilingLayout) =>
                 tilingLayout.relayout({ outerGaps }),
@@ -262,7 +262,7 @@ export class TilingManager {
             global.display,
             'window-created',
             (_display: Meta.Display, window: Meta.Window) => {
-                if (Settings.get_enable_autotiling())
+                if (Settings.ENABLE_AUTO_TILING.value)
                     this._autoTile(window, true);
             },
         );
@@ -270,7 +270,7 @@ export class TilingManager {
             TilingShellWindowManager.get(),
             'unmaximized',
             (_, window: Meta.Window) => {
-                if (Settings.get_enable_autotiling())
+                if (Settings.ENABLE_AUTO_TILING.value)
                     this._autoTile(window, false);
             },
         );
@@ -436,16 +436,16 @@ export class TilingManager {
 
         // workaround for gnome-shell bug https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/2857
         if (
-            Settings.get_enable_blur_snap_assistant() ||
-            Settings.get_enable_blur_selected_tilepreview()
+            Settings.ENABLE_BLUR_SNAP_ASSISTANT.value ||
+            Settings.ENABLE_BLUR_SELECTED_TILEPREVIEW.value
         ) {
             this._signals.connect(window, 'position-changed', () => {
-                if (Settings.get_enable_blur_selected_tilepreview()) {
+                if (Settings.ENABLE_BLUR_SELECTED_TILEPREVIEW.value) {
                     this._selectedTilesPreview
                         .get_effect('blur')
                         ?.queue_repaint();
                 }
-                if (Settings.get_enable_blur_snap_assistant()) {
+                if (Settings.ENABLE_BLUR_SNAP_ASSISTANT.value) {
                     this._snapAssist
                         .get_first_child()
                         ?.get_effect('blur')
@@ -528,7 +528,7 @@ export class TilingManager {
             squaredEuclideanDistance(currPointerPos, this._grabStartPosition) >
                 MINIMUM_DISTANCE_TO_RESTORE_ORIGINAL_SIZE
         ) {
-            if (Settings.get_restore_window_original_size()) {
+            if (Settings.RESTORE_WINDOW_ORIGINAL_SIZE.value) {
                 const windowRect = window.get_frame_rect();
                 const offsetX = (x - windowRect.x) / windowRect.width;
                 const offsetY = (y - windowRect.y) / windowRect.height;
@@ -577,31 +577,31 @@ export class TilingManager {
 
         const isSpanMultiTilesActivated = this._activationKeyStatus(
             modifier,
-            Settings.get_span_multiple_tiles_activation_key(),
+            Settings.SPAN_MULTIPLE_TILES_ACTIVATION_KEY.value,
         );
         const isTilingSystemActivated = this._activationKeyStatus(
             modifier,
-            Settings.get_tiling_system_activation_key(),
+            Settings.TILING_SYSTEM_ACTIVATION_KEY.value,
         );
-        const deactivationKey = Settings.get_tiling_system_deactivation_key();
+        const deactivationKey = Settings.TILING_SYSTEM_DEACTIVATION_KEY.value;
         const isTilingSystemDeactivated =
             deactivationKey === ActivationKey.NONE
                 ? false
                 : this._activationKeyStatus(modifier, deactivationKey);
         const allowSpanMultipleTiles =
-            Settings.get_span_multiple_tiles() && isSpanMultiTilesActivated;
+            Settings.SPAN_MULTIPLE_TILES.value && isSpanMultiTilesActivated;
         const showTilingSystem =
-            Settings.get_tiling_system_enabled() &&
+            Settings.TILING_SYSTEM.value &&
             isTilingSystemActivated &&
             !isTilingSystemDeactivated;
         // ensure we handle window movement only when needed
         // if the snap assistant activation key status is not changed and the mouse is on the same position as before
         // and the tiling system activation key status is not changed, we have nothing to do
         const changedSpanMultipleTiles =
-            Settings.get_span_multiple_tiles() &&
+            Settings.SPAN_MULTIPLE_TILES.value &&
             isSpanMultiTilesActivated !== this._wasSpanMultipleTilesActivated;
         const changedShowTilingSystem =
-            Settings.get_tiling_system_enabled() &&
+            Settings.TILING_SYSTEM.value &&
             isTilingSystemActivated !== this._wasTilingSystemActivated;
         if (
             !changedSpanMultipleTiles &&
@@ -624,7 +624,7 @@ export class TilingManager {
             }
 
             if (
-                Settings.get_active_screen_edges() &&
+                Settings.ACTIVE_SCREEN_EDGES.value &&
                 !this._isSnapAssisting &&
                 this._edgeTilingManager.canActivateEdgeTiling(currPointerPos)
             ) {
@@ -639,7 +639,7 @@ export class TilingManager {
                     this._edgeTilingManager.abortEdgeTiling();
                 }
 
-                if (Settings.get_snap_assist_enabled()) {
+                if (Settings.SNAP_ASSIST.value) {
                     this._snapAssist.onMovingWindow(
                         window,
                         true,
@@ -726,7 +726,7 @@ export class TilingManager {
 
         const isTilingSystemActivated = this._activationKeyStatus(
             global.get_pointer()[2],
-            Settings.get_tiling_system_activation_key(),
+            Settings.TILING_SYSTEM_ACTIVATION_KEY.value,
         );
         if (
             !isTilingSystemActivated &&
@@ -1012,7 +1012,6 @@ export class TilingManager {
     }
 
     private _autoTile(window: Meta.Window, windowCreated: boolean) {
-        /*
         // do not handle windows in monitors not managed by this manager
         if (window.get_monitor() !== this._monitor.index) return;
 
@@ -1061,7 +1060,7 @@ export class TilingManager {
             });
         } else {
             this._easeWindowRectFromTile(vacantTile, window, true);
-        } */
+        }
     }
 
     private _findEmptyTile(window: Meta.Window): Tile | undefined {

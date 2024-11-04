@@ -3,10 +3,10 @@ import Settings from '@settings/settings';
 import SettingsOverride from '@settings/settingsOverride';
 
 const dconfPath = '/org/gnome/shell/extensions/tilingshell/';
-const excludedKeys = [
+const excludedKeys: string[] = [
     Settings.SETTING_LAYOUTS_JSON,
-    Settings.SETTING_LAST_VERSION_NAME_INSTALLED,
-    Settings.SETTING_OVERRIDDEN_SETTINGS,
+    Settings.LAST_VERSION_NAME_INSTALLED.name,
+    Settings.OVERRIDDEN_SETTINGS.name,
 ];
 
 export default class SettingsExport {
@@ -40,8 +40,8 @@ export default class SettingsExport {
     }
 
     restoreToDefault() {
-        Settings.set_active_screen_edges(false);
-        Settings.set_enable_move_keybindings(false);
+        Settings.ACTIVE_SCREEN_EDGES.update(false);
+        Settings.ENABLE_MOVE_KEYBINDINGS.update(false);
         SettingsOverride.get().restoreAll();
         this._gioSettings
             .list_keys()

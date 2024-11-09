@@ -282,7 +282,7 @@ export class TilingManager {
 
         this._easeWindowRect(window, destination, false, force);
 
-        (window as ExtendedWindow).originalSize = undefined;
+        (window as ExtendedWindow).assignedTile = undefined;
     }
 
     public onKeyboardMoveWindow(

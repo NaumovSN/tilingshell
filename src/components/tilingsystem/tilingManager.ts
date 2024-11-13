@@ -129,7 +129,7 @@ export class TilingManager {
     public enable() {
         this._signals.connect(
             Settings,
-            Settings.SETTING_SELECTED_LAYOUTS,
+            Settings.KEY_SETTING_SELECTED_LAYOUTS,
             () => {
                 const ws = global.workspaceManager.get_active_workspace();
                 if (!ws) return;
@@ -156,13 +156,13 @@ export class TilingManager {
             },
         );
 
-        this._signals.connect(Settings, Settings.INNER_GAPS.name, () => {
+        this._signals.connect(Settings, Settings.KEY_INNER_GAPS, () => {
             const innerGaps = buildMargin(Settings.get_inner_gaps());
             this._workspaceTilingLayout.forEach((tilingLayout) =>
                 tilingLayout.relayout({ innerGaps }),
             );
         });
-        this._signals.connect(Settings, Settings.OUTER_GAPS.name, () => {
+        this._signals.connect(Settings, Settings.KEY_OUTER_GAPS, () => {
             const outerGaps = buildMargin(Settings.get_outer_gaps());
             this._workspaceTilingLayout.forEach((tilingLayout) =>
                 tilingLayout.relayout({ outerGaps }),
@@ -262,16 +262,14 @@ export class TilingManager {
             global.display,
             'window-created',
             (_display: Meta.Display, window: Meta.Window) => {
-                if (Settings.ENABLE_AUTO_TILING.value)
-                    this._autoTile(window, true);
+                if (Settings.ENABLE_AUTO_TILING) this._autoTile(window, true);
             },
         );
         this._signals.connect(
             TilingShellWindowManager.get(),
             'unmaximized',
             (_, window: Meta.Window) => {
-                if (Settings.ENABLE_AUTO_TILING.value)
-                    this._autoTile(window, false);
+                if (Settings.ENABLE_AUTO_TILING) this._autoTile(window, false);
             },
         );
     }
@@ -436,16 +434,16 @@ export class TilingManager {
 
         // workaround for gnome-shell bug https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/2857
         if (
-            Settings.ENABLE_BLUR_SNAP_ASSISTANT.value ||
-            Settings.ENABLE_BLUR_SELECTED_TILEPREVIEW.value
+            Settings.ENABLE_BLUR_SNAP_ASSISTANT ||
+            Settings.ENABLE_BLUR_SELECTED_TILEPREVIEW
         ) {
             this._signals.connect(window, 'position-changed', () => {
-                if (Settings.ENABLE_BLUR_SELECTED_TILEPREVIEW.value) {
+                if (Settings.ENABLE_BLUR_SELECTED_TILEPREVIEW) {
                     this._selectedTilesPreview
                         .get_effect('blur')
                         ?.queue_repaint();
                 }
-                if (Settings.ENABLE_BLUR_SNAP_ASSISTANT.value) {
+                if (Settings.ENABLE_BLUR_SNAP_ASSISTANT) {
                     this._snapAssist
                         .get_first_child()
                         ?.get_effect('blur')
@@ -528,7 +526,7 @@ export class TilingManager {
             squaredEuclideanDistance(currPointerPos, this._grabStartPosition) >
                 MINIMUM_DISTANCE_TO_RESTORE_ORIGINAL_SIZE
         ) {
-            if (Settings.RESTORE_WINDOW_ORIGINAL_SIZE.value) {
+            if (Settings.RESTORE_WINDOW_ORIGINAL_SIZE) {
                 const windowRect = window.get_frame_rect();
                 const offsetX = (x - windowRect.x) / windowRect.width;
                 const offsetY = (y - windowRect.y) / windowRect.height;
@@ -577,31 +575,31 @@ export class TilingManager {
 
         const isSpanMultiTilesActivated = this._activationKeyStatus(
             modifier,
-            Settings.SPAN_MULTIPLE_TILES_ACTIVATION_KEY.value,
+            Settings.SPAN_MULTIPLE_TILES_ACTIVATION_KEY,
         );
         const isTilingSystemActivated = this._activationKeyStatus(
             modifier,
-            Settings.TILING_SYSTEM_ACTIVATION_KEY.value,
+            Settings.TILING_SYSTEM_ACTIVATION_KEY,
         );
-        const deactivationKey = Settings.TILING_SYSTEM_DEACTIVATION_KEY.value;
+        const deactivationKey = Settings.TILING_SYSTEM_DEACTIVATION_KEY;
         const isTilingSystemDeactivated =
             deactivationKey === ActivationKey.NONE
                 ? false
                 : this._activationKeyStatus(modifier, deactivationKey);
         const allowSpanMultipleTiles =
-            Settings.SPAN_MULTIPLE_TILES.value && isSpanMultiTilesActivated;
+            Settings.SPAN_MULTIPLE_TILES && isSpanMultiTilesActivated;
         const showTilingSystem =
-            Settings.TILING_SYSTEM.value &&
+            Settings.TILING_SYSTEM &&
             isTilingSystemActivated &&
             !isTilingSystemDeactivated;
         // ensure we handle window movement only when needed
         // if the snap assistant activation key status is not changed and the mouse is on the same position as before
         // and the tiling system activation key status is not changed, we have nothing to do
         const changedSpanMultipleTiles =
-            Settings.SPAN_MULTIPLE_TILES.value &&
+            Settings.SPAN_MULTIPLE_TILES &&
             isSpanMultiTilesActivated !== this._wasSpanMultipleTilesActivated;
         const changedShowTilingSystem =
-            Settings.TILING_SYSTEM.value &&
+            Settings.TILING_SYSTEM &&
             isTilingSystemActivated !== this._wasTilingSystemActivated;
         if (
             !changedSpanMultipleTiles &&
@@ -624,7 +622,7 @@ export class TilingManager {
             }
 
             if (
-                Settings.ACTIVE_SCREEN_EDGES.value &&
+                Settings.ACTIVE_SCREEN_EDGES &&
                 !this._isSnapAssisting &&
                 this._edgeTilingManager.canActivateEdgeTiling(currPointerPos)
             ) {
@@ -639,7 +637,7 @@ export class TilingManager {
                     this._edgeTilingManager.abortEdgeTiling();
                 }
 
-                if (Settings.SNAP_ASSIST.value) {
+                if (Settings.SNAP_ASSIST) {
                     this._snapAssist.onMovingWindow(
                         window,
                         true,
@@ -726,7 +724,7 @@ export class TilingManager {
 
         const isTilingSystemActivated = this._activationKeyStatus(
             global.get_pointer()[2],
-            Settings.TILING_SYSTEM_ACTIVATION_KEY.value,
+            Settings.TILING_SYSTEM_ACTIVATION_KEY,
         );
         if (
             !isTilingSystemActivated &&

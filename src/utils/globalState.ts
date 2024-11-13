@@ -65,19 +65,23 @@ export default class GlobalState extends GObject.Object {
         this.validate_selected_layouts();
 
         Settings.bind(
-            Settings.TILE_PREVIEW_ANIMATION_TIME,
+            Settings.KEY_TILE_PREVIEW_ANIMATION_TIME,
             this,
             'tilePreviewAnimationTime',
             Gio.SettingsBindFlags.GET,
         );
-        this._signals.connect(Settings, Settings.SETTING_LAYOUTS_JSON, () => {
-            this._layouts = Settings.get_layouts_json();
-            this.emit(GlobalState.SIGNAL_LAYOUTS_CHANGED);
-        });
+        this._signals.connect(
+            Settings,
+            Settings.KEY_SETTING_LAYOUTS_JSON,
+            () => {
+                this._layouts = Settings.get_layouts_json();
+                this.emit(GlobalState.SIGNAL_LAYOUTS_CHANGED);
+            },
+        );
 
         this._signals.connect(
             Settings,
-            Settings.SETTING_SELECTED_LAYOUTS,
+            Settings.KEY_SETTING_SELECTED_LAYOUTS,
             () => {
                 const selected_layouts = Settings.get_selected_layouts();
                 if (selected_layouts.length === 0) {

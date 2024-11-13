@@ -9,163 +9,105 @@ export enum ActivationKey {
     SUPER,
 }
 
-export abstract class Setting<T> {
-    protected _name: string;
-
-    constructor(name: string) {
-        this._name = name;
-    }
-
-    get name(): string {
-        return this._name;
-    }
-
-    abstract get value(): T;
-    abstract update(val: T): boolean;
+/** ------------- Utility functions ------------- */
+function get_string(key: string): string {
+    return (
+        Settings.gioSetting.get_string(key) ??
+        Settings.gioSetting.get_default_value(key)?.get_string()[0]
+    );
 }
 
-export class BooleanSetting extends Setting<boolean> {
-    get value(): boolean {
-        return (
-            Settings.gioSetting.get_boolean(this._name) ??
-            Settings.gioSetting.get_default_value(this._name)?.get_boolean()
-        );
-    }
-
-    update(val: boolean): boolean {
-        return Settings.gioSetting.set_boolean(this._name, val);
-    }
+function set_string(key: string, val: string): boolean {
+    return Settings.gioSetting.set_string(key, val);
 }
 
-export class StringSetting extends Setting<string> {
-    get value(): string {
-        return (
-            Settings.gioSetting.get_string(this._name) ??
-            Settings.gioSetting.get_default_value(this._name)?.get_string()[0]
-        );
-    }
-
-    update(val: string): boolean {
-        return Settings.gioSetting.set_string(this._name, val);
-    }
+function get_boolean(key: string): boolean {
+    return (
+        Settings.gioSetting.get_boolean(key) ??
+        Settings.gioSetting.get_default_value(key)?.get_boolean()
+    );
 }
 
-export class NumberSetting extends Setting<number> {
-    get value(): number {
-        return (
-            Settings.gioSetting.get_int(this._name) ??
-            Settings.gioSetting.get_default_value(this._name)?.get_int64()
-        );
-    }
-
-    update(val: number): boolean {
-        return Settings.gioSetting.set_int(this._name, val);
-    }
+function set_boolean(key: string, val: boolean): boolean {
+    return Settings.gioSetting.set_boolean(key, val);
 }
 
-export class UnsignedNumberSetting extends NumberSetting {
-    get value(): number {
-        return (
-            Settings.gioSetting.get_uint(this._name) ??
-            Settings.gioSetting.get_default_value(this._name)?.get_uint64()
-        );
-    }
-
-    update(val: number): boolean {
-        return Settings.gioSetting.set_uint(this._name, val);
-    }
+function get_number(key: string): number {
+    return (
+        Settings.gioSetting.get_int(key) ??
+        Settings.gioSetting.get_default_value(key)?.get_int64()
+    );
 }
 
-export class ActivationKeySetting extends Setting<ActivationKey> {
-    private _defaultValueString: string;
+function set_number(key: string, val: number): boolean {
+    return Settings.gioSetting.set_int(key, val);
+}
 
-    constructor(name: string, defaultValue: ActivationKey) {
-        super(name);
-        this._defaultValueString = defaultValue.toString();
-    }
+function get_unsigned_number(key: string): number {
+    return (
+        Settings.gioSetting.get_uint(key) ??
+        Settings.gioSetting.get_default_value(key)?.get_uint64()
+    );
+}
 
-    get value(): ActivationKey {
-        let val = Settings.gioSetting.get_strv(this._name);
-        if (!val || val.length === 0) {
-            val = Settings.gioSetting
-                .get_default_value(this._name)
-                ?.get_strv() ?? [this._defaultValueString];
-            if (val.length === 0) val = [this._defaultValueString];
-        }
-        return Number(val[0]);
-    }
+function set_unsigned_number(key: string, val: number): boolean {
+    return Settings.gioSetting.set_uint(key, val);
+}
 
-    update(val: ActivationKey): boolean {
-        return Settings.gioSetting.set_strv(this._name, [String(val)]);
+function get_activationkey(
+    key: string,
+    defaultValue: ActivationKey,
+): ActivationKey {
+    let val = Settings.gioSetting.get_strv(key);
+    if (!val || val.length === 0) {
+        val = Settings.gioSetting.get_default_value(key)?.get_strv() ?? [
+            String(defaultValue),
+        ];
+        if (val.length === 0) val = [String(defaultValue)];
     }
+    return Number(val[0]);
+}
+
+function set_activationkey(key: string, val: ActivationKey): boolean {
+    return Settings.gioSetting.set_strv(key, [String(val)]);
 }
 
 export default class Settings {
     static _settings: Gio.Settings | null;
     static _is_initialized: boolean = false;
 
-    static LAST_VERSION_NAME_INSTALLED = new StringSetting(
-        'last-version-name-installed',
-    );
-    static OVERRIDDEN_SETTINGS = new StringSetting('overridden-settings');
-    static TILING_SYSTEM = new BooleanSetting('enable-tiling-system');
-    static TILING_SYSTEM_ACTIVATION_KEY = new ActivationKeySetting(
-        'tiling-system-activation-key',
-        ActivationKey.CTRL,
-    );
-    static TILING_SYSTEM_DEACTIVATION_KEY = new ActivationKeySetting(
-        'tiling-system-deactivation-key',
-        ActivationKey.NONE,
-    );
-    static SNAP_ASSIST = new BooleanSetting('enable-snap-assist');
-    static SHOW_INDICATOR = new BooleanSetting('show-indicator');
-    static INNER_GAPS = new UnsignedNumberSetting('inner-gaps');
-    static OUTER_GAPS = new UnsignedNumberSetting('outer-gaps');
-    static SPAN_MULTIPLE_TILES = new BooleanSetting(
-        'enable-span-multiple-tiles',
-    );
-    static SPAN_MULTIPLE_TILES_ACTIVATION_KEY = new ActivationKeySetting(
-        'span-multiple-tiles-activation-key',
-        ActivationKey.ALT,
-    );
-    static SETTING_LAYOUTS_JSON = 'layouts-json';
-    static SETTING_SELECTED_LAYOUTS = 'selected-layouts';
-    static RESTORE_WINDOW_ORIGINAL_SIZE = new BooleanSetting(
-        'restore-window-original-size',
-    );
-    static RESIZE_COMPLEMENTING_WINDOWS = new BooleanSetting(
-        'resize-complementing-windows',
-    );
-    static ENABLE_BLUR_SNAP_ASSISTANT = new BooleanSetting(
-        'enable-blur-snap-assistant',
-    );
-    static ENABLE_BLUR_SELECTED_TILEPREVIEW = new BooleanSetting(
-        'enable-blur-selected-tilepreview',
-    );
-    static ENABLE_MOVE_KEYBINDINGS = new BooleanSetting(
-        'enable-move-keybindings',
-    );
-    static ENABLE_AUTO_TILING = new BooleanSetting('enable-autotiling');
-    static ACTIVE_SCREEN_EDGES = new BooleanSetting('active-screen-edges');
-    static TOP_EDGE_MAXIMIZE = new BooleanSetting('top-edge-maximize');
-    static OVERRIDE_WINDOW_MENU = new BooleanSetting('override-window-menu');
-    static SNAP_ASSISTANT_THRESHOLD = new NumberSetting(
-        'snap-assistant-threshold',
-    );
-    static QUARTER_TILING_THRESHOLD = new UnsignedNumberSetting(
-        'quarter-tiling-threshold',
-    );
-    static WINDOW_BORDER_COLOR = new StringSetting('window-border-color');
-    static WINDOW_BORDER_WIDTH = new UnsignedNumberSetting(
-        'window-border-width',
-    );
-    static ENABLE_WINDOW_BORDER = new BooleanSetting('enable-window-border');
-    static SNAP_ASSISTANT_ANIMATION_TIME = new UnsignedNumberSetting(
-        'snap-assistant-animation-time',
-    );
-    static TILE_PREVIEW_ANIMATION_TIME = new UnsignedNumberSetting(
-        'tile-preview-animation-time',
-    );
+    static KEY_LAST_VERSION_NAME_INSTALLED = 'last-version-name-installed';
+    static KEY_OVERRIDDEN_SETTINGS = 'overridden-settings';
+    static KEY_WINDOW_BORDER_COLOR = 'window-border-color';
+    static KEY_TILING_SYSTEM = 'enable-tiling-system';
+    static KEY_SNAP_ASSIST = 'enable-snap-assist';
+    static KEY_SHOW_INDICATOR = 'show-indicator';
+    static KEY_TILING_SYSTEM_ACTIVATION_KEY = 'tiling-system-activation-key';
+    static KEY_TILING_SYSTEM_DEACTIVATION_KEY =
+        'tiling-system-deactivation-key';
+    static KEY_SPAN_MULTIPLE_TILES_ACTIVATION_KEY =
+        'span-multiple-tiles-activation-key';
+    static KEY_SPAN_MULTIPLE_TILES = 'enable-span-multiple-tiles';
+    static KEY_RESTORE_WINDOW_ORIGINAL_SIZE = 'restore-window-original-size';
+    static KEY_RESIZE_COMPLEMENTING_WINDOWS = 'resize-complementing-windows';
+    static KEY_ENABLE_BLUR_SNAP_ASSISTANT = 'enable-blur-snap-assistant';
+    static KEY_ENABLE_BLUR_SELECTED_TILEPREVIEW =
+        'enable-blur-selected-tilepreview';
+    static KEY_ENABLE_MOVE_KEYBINDINGS = 'enable-move-keybindings';
+    static KEY_ENABLE_AUTO_TILING = 'enable-autotiling';
+    static KEY_ACTIVE_SCREEN_EDGES = 'active-screen-edges';
+    static KEY_TOP_EDGE_MAXIMIZE = 'top-edge-maximize';
+    static KEY_OVERRIDE_WINDOW_MENU = 'override-window-menu';
+    static KEY_SNAP_ASSISTANT_THRESHOLD = 'snap-assistant-threshold';
+    static KEY_ENABLE_WINDOW_BORDER = 'enable-window-border';
+    static KEY_INNER_GAPS = 'inner-gaps';
+    static KEY_OUTER_GAPS = 'outer-gaps';
+    static KEY_SNAP_ASSISTANT_ANIMATION_TIME = 'snap-assistant-animation-time';
+    static KEY_TILE_PREVIEW_ANIMATION_TIME = 'tile-preview-animation-time';
+    static KEY_SETTING_LAYOUTS_JSON = 'layouts-json';
+    static KEY_SETTING_SELECTED_LAYOUTS = 'selected-layouts';
+    static KEY_WINDOW_BORDER_WIDTH = 'window-border-width';
+    static KEY_QUARTER_TILING_THRESHOLD = 'quarter-tiling-threshold';
 
     static SETTING_MOVE_WINDOW_RIGHT = 'move-window-right';
     static SETTING_MOVE_WINDOW_LEFT = 'move-window-left';
@@ -201,14 +143,239 @@ export default class Settings {
         return this._settings ?? new Gio.Settings();
     }
 
-    static bind<T>(
-        sett: Setting<T>,
+    static bind(
+        key: string,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         object: GObject.Object | any,
         property: string,
         flags: Gio.SettingsBindFlags = Gio.SettingsBindFlags.DEFAULT,
     ): void {
-        this._settings?.bind(sett.name, object, property, flags);
+        this._settings?.bind(key, object, property, flags);
+    }
+
+    static get LAST_VERSION_NAME_INSTALLED(): string {
+        return get_string(Settings.KEY_LAST_VERSION_NAME_INSTALLED);
+    }
+
+    static set LAST_VERSION_NAME_INSTALLED(val: string) {
+        set_string(Settings.KEY_LAST_VERSION_NAME_INSTALLED, val);
+    }
+
+    static get OVERRIDDEN_SETTINGS(): string {
+        return get_string(Settings.KEY_OVERRIDDEN_SETTINGS);
+    }
+
+    static set OVERRIDDEN_SETTINGS(val: string) {
+        set_string(Settings.KEY_OVERRIDDEN_SETTINGS, val);
+    }
+
+    static get TILING_SYSTEM(): boolean {
+        return get_boolean(Settings.KEY_TILING_SYSTEM);
+    }
+
+    static set TILING_SYSTEM(val: boolean) {
+        set_boolean(Settings.KEY_TILING_SYSTEM, val);
+    }
+
+    static get SNAP_ASSIST(): boolean {
+        return get_boolean(Settings.KEY_SNAP_ASSIST);
+    }
+
+    static set SNAP_ASSIST(val: boolean) {
+        set_boolean(Settings.KEY_SNAP_ASSIST, val);
+    }
+
+    static get SHOW_INDICATOR(): boolean {
+        return get_boolean(Settings.KEY_SHOW_INDICATOR);
+    }
+
+    static set SHOW_INDICATOR(val: boolean) {
+        set_boolean(Settings.KEY_SHOW_INDICATOR, val);
+    }
+
+    static get TILING_SYSTEM_ACTIVATION_KEY(): ActivationKey {
+        return get_activationkey(
+            Settings.KEY_TILING_SYSTEM_ACTIVATION_KEY,
+            ActivationKey.CTRL,
+        );
+    }
+
+    static set TILING_SYSTEM_ACTIVATION_KEY(val: ActivationKey) {
+        set_activationkey(Settings.KEY_TILING_SYSTEM_ACTIVATION_KEY, val);
+    }
+
+    static get TILING_SYSTEM_DEACTIVATION_KEY(): ActivationKey {
+        return get_activationkey(
+            Settings.KEY_TILING_SYSTEM_DEACTIVATION_KEY,
+            ActivationKey.NONE,
+        );
+    }
+
+    static set TILING_SYSTEM_DEACTIVATION_KEY(val: ActivationKey) {
+        set_activationkey(Settings.KEY_TILING_SYSTEM_DEACTIVATION_KEY, val);
+    }
+
+    static get INNER_GAPS(): number {
+        return get_unsigned_number(Settings.KEY_INNER_GAPS);
+    }
+
+    static set INNER_GAPS(val: number) {
+        set_unsigned_number(Settings.KEY_INNER_GAPS, val);
+    }
+
+    static get OUTER_GAPS(): number {
+        return get_unsigned_number(Settings.KEY_OUTER_GAPS);
+    }
+
+    static set OUTER_GAPS(val: number) {
+        set_unsigned_number(Settings.KEY_OUTER_GAPS, val);
+    }
+
+    static get SPAN_MULTIPLE_TILES(): boolean {
+        return get_boolean(Settings.KEY_SPAN_MULTIPLE_TILES);
+    }
+
+    static set SPAN_MULTIPLE_TILES(val: boolean) {
+        set_boolean(Settings.KEY_SPAN_MULTIPLE_TILES, val);
+    }
+
+    static get SPAN_MULTIPLE_TILES_ACTIVATION_KEY(): ActivationKey {
+        return get_activationkey(
+            Settings.KEY_SPAN_MULTIPLE_TILES_ACTIVATION_KEY,
+            ActivationKey.ALT,
+        );
+    }
+
+    static set SPAN_MULTIPLE_TILES_ACTIVATION_KEY(val: ActivationKey) {
+        set_activationkey(Settings.KEY_SPAN_MULTIPLE_TILES_ACTIVATION_KEY, val);
+    }
+
+    static get RESTORE_WINDOW_ORIGINAL_SIZE(): boolean {
+        return get_boolean(Settings.KEY_RESTORE_WINDOW_ORIGINAL_SIZE);
+    }
+
+    static set RESTORE_WINDOW_ORIGINAL_SIZE(val: boolean) {
+        set_boolean(Settings.KEY_RESTORE_WINDOW_ORIGINAL_SIZE, val);
+    }
+
+    static get RESIZE_COMPLEMENTING_WINDOWS(): boolean {
+        return get_boolean(Settings.KEY_RESIZE_COMPLEMENTING_WINDOWS);
+    }
+
+    static set RESIZE_COMPLEMENTING_WINDOWS(val: boolean) {
+        set_boolean(Settings.KEY_RESIZE_COMPLEMENTING_WINDOWS, val);
+    }
+
+    static get ENABLE_BLUR_SNAP_ASSISTANT(): boolean {
+        return get_boolean(Settings.KEY_ENABLE_BLUR_SNAP_ASSISTANT);
+    }
+
+    static set ENABLE_BLUR_SNAP_ASSISTANT(val: boolean) {
+        set_boolean(Settings.KEY_ENABLE_BLUR_SNAP_ASSISTANT, val);
+    }
+
+    static get ENABLE_BLUR_SELECTED_TILEPREVIEW(): boolean {
+        return get_boolean(Settings.KEY_ENABLE_BLUR_SELECTED_TILEPREVIEW);
+    }
+
+    static set ENABLE_BLUR_SELECTED_TILEPREVIEW(val: boolean) {
+        set_boolean(Settings.KEY_ENABLE_BLUR_SELECTED_TILEPREVIEW, val);
+    }
+
+    static get ENABLE_MOVE_KEYBINDINGS(): boolean {
+        return get_boolean(Settings.KEY_ENABLE_MOVE_KEYBINDINGS);
+    }
+
+    static set ENABLE_MOVE_KEYBINDINGS(val: boolean) {
+        set_boolean(Settings.KEY_ENABLE_MOVE_KEYBINDINGS, val);
+    }
+
+    static get ENABLE_AUTO_TILING(): boolean {
+        return get_boolean(Settings.KEY_ENABLE_AUTO_TILING);
+    }
+
+    static set ENABLE_AUTO_TILING(val: boolean) {
+        set_boolean(Settings.KEY_ENABLE_AUTO_TILING, val);
+    }
+
+    static get ACTIVE_SCREEN_EDGES(): boolean {
+        return get_boolean(Settings.KEY_ACTIVE_SCREEN_EDGES);
+    }
+
+    static set ACTIVE_SCREEN_EDGES(val: boolean) {
+        set_boolean(Settings.KEY_ACTIVE_SCREEN_EDGES, val);
+    }
+
+    static get TOP_EDGE_MAXIMIZE(): boolean {
+        return get_boolean(Settings.KEY_TOP_EDGE_MAXIMIZE);
+    }
+
+    static set TOP_EDGE_MAXIMIZE(val: boolean) {
+        set_boolean(Settings.KEY_TOP_EDGE_MAXIMIZE, val);
+    }
+
+    static get OVERRIDE_WINDOW_MENU(): boolean {
+        return get_boolean(Settings.KEY_OVERRIDE_WINDOW_MENU);
+    }
+
+    static set OVERRIDE_WINDOW_MENU(val: boolean) {
+        set_boolean(Settings.KEY_OVERRIDE_WINDOW_MENU, val);
+    }
+
+    static get SNAP_ASSISTANT_THRESHOLD(): number {
+        return get_number(Settings.KEY_SNAP_ASSISTANT_THRESHOLD);
+    }
+
+    static set SNAP_ASSISTANT_THRESHOLD(val: number) {
+        set_number(Settings.KEY_SNAP_ASSISTANT_THRESHOLD, val);
+    }
+
+    static get QUARTER_TILING_THRESHOLD(): number {
+        return get_unsigned_number(Settings.KEY_QUARTER_TILING_THRESHOLD);
+    }
+
+    static set QUARTER_TILING_THRESHOLD(val: number) {
+        set_unsigned_number(Settings.KEY_QUARTER_TILING_THRESHOLD, val);
+    }
+
+    static get WINDOW_BORDER_COLOR(): string {
+        return get_string(Settings.KEY_WINDOW_BORDER_COLOR);
+    }
+
+    static set WINDOW_BORDER_COLOR(val: string) {
+        set_string(Settings.KEY_WINDOW_BORDER_COLOR, val);
+    }
+
+    static get WINDOW_BORDER_WIDTH(): number {
+        return get_unsigned_number(Settings.KEY_WINDOW_BORDER_WIDTH);
+    }
+
+    static set WINDOW_BORDER_WIDTH(val: number) {
+        set_unsigned_number(Settings.KEY_WINDOW_BORDER_WIDTH, val);
+    }
+
+    static get ENABLE_WINDOW_BORDER(): boolean {
+        return get_boolean(Settings.KEY_ENABLE_WINDOW_BORDER);
+    }
+
+    static set ENABLE_WINDOW_BORDER(val: boolean) {
+        set_boolean(Settings.KEY_ENABLE_WINDOW_BORDER, val);
+    }
+
+    static get SNAP_ASSISTANT_ANIMATION_TIME(): number {
+        return get_unsigned_number(Settings.KEY_SNAP_ASSISTANT_ANIMATION_TIME);
+    }
+
+    static set SNAP_ASSISTANT_ANIMATION_TIME(val: number) {
+        set_unsigned_number(Settings.KEY_SNAP_ASSISTANT_ANIMATION_TIME, val);
+    }
+
+    static get TILE_PREVIEW_ANIMATION_TIME(): number {
+        return get_unsigned_number(Settings.KEY_TILE_PREVIEW_ANIMATION_TIME);
+    }
+
+    static set TILE_PREVIEW_ANIMATION_TIME(val: number) {
+        set_unsigned_number(Settings.KEY_TILE_PREVIEW_ANIMATION_TIME, val);
     }
 
     static get_inner_gaps(scaleFactor: number = 1): {
@@ -218,7 +385,7 @@ export default class Settings {
         right: number;
     } {
         // get the gaps settings and scale by scale factor
-        const value = this.INNER_GAPS.value * scaleFactor;
+        const value = this.INNER_GAPS * scaleFactor;
         return {
             top: value,
             bottom: value,
@@ -234,7 +401,7 @@ export default class Settings {
         right: number;
     } {
         // get the gaps settings and scale by scale factor
-        const value = this.OUTER_GAPS.value * scaleFactor;
+        const value = this.OUTER_GAPS * scaleFactor;
         return {
             top: value,
             bottom: value,
@@ -246,7 +413,8 @@ export default class Settings {
     static get_layouts_json(): Layout[] {
         try {
             const layouts = JSON.parse(
-                this._settings?.get_string(this.SETTING_LAYOUTS_JSON) || '[]',
+                this._settings?.get_string(this.KEY_SETTING_LAYOUTS_JSON) ||
+                    '[]',
             ) as Layout[];
             if (layouts.length === 0)
                 throw new Error('At least one layout is required');
@@ -254,14 +422,15 @@ export default class Settings {
         } catch (ex: unknown) {
             this.reset_layouts_json();
             return JSON.parse(
-                this._settings?.get_string(this.SETTING_LAYOUTS_JSON) || '[]',
+                this._settings?.get_string(this.KEY_SETTING_LAYOUTS_JSON) ||
+                    '[]',
             ) as Layout[];
         }
     }
 
     static get_selected_layouts(): string[][] {
         const variant = this._settings?.get_value(
-            Settings.SETTING_SELECTED_LAYOUTS,
+            Settings.KEY_SETTING_SELECTED_LAYOUTS,
         );
         if (!variant) return [];
 
@@ -396,22 +565,25 @@ export default class Settings {
 
     static save_layouts_json(layouts: Layout[]) {
         this._settings?.set_string(
-            this.SETTING_LAYOUTS_JSON,
+            this.KEY_SETTING_LAYOUTS_JSON,
             JSON.stringify(layouts),
         );
     }
 
     static save_selected_layouts(ids: string[][]) {
         if (ids.length === 0) {
-            this._settings?.reset(Settings.SETTING_SELECTED_LAYOUTS);
+            this._settings?.reset(Settings.KEY_SETTING_SELECTED_LAYOUTS);
             return;
         }
         const variants = ids.map((monitor_ids) =>
             GLib.Variant.new_strv(monitor_ids),
         );
         const result = GLib.Variant.new_array(null, variants);
-        // @ts-expect-error "'result' is of a correct variant type"
-        this._settings?.set_value(Settings.SETTING_SELECTED_LAYOUTS, result);
+        this._settings?.set_value(
+            Settings.KEY_SETTING_SELECTED_LAYOUTS,
+            // @ts-expect-error "'result' is of a correct variant type"
+            result,
+        );
     }
 
     static connect(key: string, func: (...arg: unknown[]) => void): number {

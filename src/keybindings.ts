@@ -51,17 +51,17 @@ export default class KeyBindings extends GObject.Object {
 
         this._signals.connect(
             Settings,
-            Settings.ENABLE_MOVE_KEYBINDINGS.name,
+            Settings.KEY_ENABLE_MOVE_KEYBINDINGS,
             () => {
                 this._setupKeyBindings(extensionSettings);
             },
         );
-        if (Settings.ENABLE_MOVE_KEYBINDINGS.value)
+        if (Settings.ENABLE_MOVE_KEYBINDINGS)
             this._setupKeyBindings(extensionSettings);
     }
 
     private _setupKeyBindings(extensionSettings: Gio.Settings) {
-        if (Settings.ENABLE_MOVE_KEYBINDINGS.value)
+        if (Settings.ENABLE_MOVE_KEYBINDINGS)
             this._applyKeybindings(extensionSettings);
         else this._removeKeybindings();
     }

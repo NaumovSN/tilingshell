@@ -54,10 +54,9 @@ export default class EdgeTilingManager extends GObject.Object {
         this._rightCenter = buildRectangle();
         this._activeEdgeTile = null;
         this.workarea = initialWorkArea;
-        this._quarterActivationPercentage =
-            Settings.QUARTER_TILING_THRESHOLD.value;
+        this._quarterActivationPercentage = Settings.QUARTER_TILING_THRESHOLD;
         Settings.bind(
-            Settings.QUARTER_TILING_THRESHOLD,
+            Settings.KEY_QUARTER_TILING_THRESHOLD,
             this,
             'quarterActivationPercentage',
         );
@@ -242,7 +241,7 @@ export default class EdgeTilingManager extends GObject.Object {
     public needMaximize(): boolean {
         return (
             this._activeEdgeTile !== null &&
-            Settings.TOP_EDGE_MAXIMIZE.value &&
+            Settings.TOP_EDGE_MAXIMIZE &&
             this._activeEdgeTile === this._topCenter
         );
     }

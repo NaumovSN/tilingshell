@@ -26,8 +26,7 @@ export class ResizingManager {
                 const moving =
                     grabOp === Meta.GrabOp.KEYBOARD_MOVING ||
                     grabOp === Meta.GrabOp.MOVING;
-                if (moving || !Settings.RESIZE_COMPLEMENTING_WINDOWS.value)
-                    return;
+                if (moving || !Settings.RESIZE_COMPLEMENTING_WINDOWS) return;
 
                 this._onWindowResizingBegin(window, grabOp & ~1024);
             },

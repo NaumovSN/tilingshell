@@ -170,17 +170,21 @@ export default class DefaultMenu implements CurrentMenu {
         this._layoutsRows = [];
         this._drawLayouts();
         // update the layouts shown by the indicator when they are modified
-        this._signals.connect(Settings, Settings.SETTING_LAYOUTS_JSON, () => {
-            this._drawLayouts();
-        });
-        this._signals.connect(Settings, Settings.INNER_GAPS.name, () => {
+        this._signals.connect(
+            Settings,
+            Settings.KEY_SETTING_LAYOUTS_JSON,
+            () => {
+                this._drawLayouts();
+            },
+        );
+        this._signals.connect(Settings, Settings.KEY_INNER_GAPS, () => {
             this._drawLayouts();
         });
 
         // if the selected layout was changed externaly, update the selected button
         this._signals.connect(
             Settings,
-            Settings.SETTING_SELECTED_LAYOUTS,
+            Settings.KEY_SETTING_SELECTED_LAYOUTS,
             () => {
                 this._updateScaling();
                 if (this._layoutsRows.length !== getMonitors().length)

@@ -9,7 +9,7 @@ import { logger } from '@utils/logger';
 const debug = logger('KeyBindings');
 
 export enum KeyBindingsDirection {
-    CENTER = 1,
+    NODIRECTION = 1,
     UP,
     DOWN,
     LEFT,

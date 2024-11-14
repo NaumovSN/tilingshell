@@ -219,7 +219,7 @@ export default class TilingShellExtension extends Extension {
                 (kb: KeyBindings, dp: Meta.Display) => {
                     this._onKeyboardMoveWin(
                         dp,
-                        KeyBindingsDirection.CENTER,
+                        KeyBindingsDirection.NODIRECTION,
                         false,
                     );
                 },
@@ -396,13 +396,17 @@ export default class TilingShellExtension extends Extension {
             this._tilingManagers[focus_window.get_monitor()];
         if (!monitorTilingManager) return;
 
+        if (Settings.ENABLE_AUTO_TILING && focus_window.get_maximized()) {
+            focus_window.unmaximize(Meta.MaximizeFlags.BOTH);
+            return;
+        }
         const success = monitorTilingManager.onKeyboardMoveWindow(
             focus_window,
             direction,
             false,
             spanFlag,
         );
-        if (success || direction === KeyBindingsDirection.CENTER) return;
+        if (success || direction === KeyBindingsDirection.NODIRECTION) return;
 
         let displayDirection = Meta.DisplayDirection.DOWN;
         switch (direction) {

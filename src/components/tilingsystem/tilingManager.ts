@@ -295,57 +295,71 @@ export class TilingManager {
         const currentWs = window.get_workspace();
         const tilingLayout = this._workspaceTilingLayout.get(currentWs);
         if (!tilingLayout) return false;
+        const windowRectCopy = window.get_frame_rect().copy();
+        const extWin = window as ExtendedWindow;
 
         if (window.get_maximized()) {
             switch (direction) {
-                case KeyBindingsDirection.CENTER:
-                    window.unmaximize(Meta.MaximizeFlags.BOTH);
+                case KeyBindingsDirection.NODIRECTION:
+                case KeyBindingsDirection.LEFT:
+                case KeyBindingsDirection.RIGHT:
                     break;
                 case KeyBindingsDirection.DOWN:
                     window.unmaximize(Meta.MaximizeFlags.BOTH);
                     return true;
                 case KeyBindingsDirection.UP:
                     return false;
-                case KeyBindingsDirection.LEFT:
-                    destination = tilingLayout.getLeftmostTile();
-                    break;
-                case KeyBindingsDirection.RIGHT:
-                    destination = tilingLayout.getRightmostTile();
-                    break;
             }
         }
 
-        // find the nearest tile
-        const windowRectCopy = window.get_frame_rect().copy();
-        if (!destination) {
-            // if the window is not tiled, find the nearest tile in any direction
-            if (direction === KeyBindingsDirection.CENTER) {
-                // direction is undefined -> move to the center of the screen
-                const rect = buildRectangle({
-                    x:
-                        this._workArea.x +
-                        this._workArea.width / 2 -
-                        windowRectCopy.width / 2,
-                    y:
-                        this._workArea.y +
-                        this._workArea.height / 2 -
-                        windowRectCopy.height / 2,
-                    width: windowRectCopy.width,
-                    height: windowRectCopy.height,
-                });
-                destination = {
-                    rect,
-                    tile: TileUtils.build_tile(rect, this._workArea),
-                };
-            } else if (!(window as ExtendedWindow).assignedTile) {
-                destination = tilingLayout.findNearestTile(windowRectCopy);
-            } else {
-                destination = tilingLayout.findNearestTileDirection(
-                    windowRectCopy,
-                    direction,
-                );
-            }
+        // maximize the window using keybindings
+        if (
+            direction === KeyBindingsDirection.UP &&
+            extWin.assignedTile &&
+            extWin.assignedTile?.y === 0
+        ) {
+            window.maximize(Meta.MaximizeFlags.BOTH);
+            return true;
         }
+
+        // find the nearest tile
+        // direction is CENTER -> move to the center of the screen
+        if (direction === KeyBindingsDirection.NODIRECTION) {
+            const rect = buildRectangle({
+                x:
+                    this._workArea.x +
+                    this._workArea.width / 2 -
+                    windowRectCopy.width / 2,
+                y:
+                    this._workArea.y +
+                    this._workArea.height / 2 -
+                    windowRectCopy.height / 2,
+                width: windowRectCopy.width,
+                height: windowRectCopy.height,
+            });
+            destination = {
+                rect,
+                tile: TileUtils.build_tile(rect, this._workArea),
+            };
+        } else {
+            destination = tilingLayout.findNearestTileDirection(
+                windowRectCopy,
+                direction,
+            );
+        }
+
+        // if the window is already on the desired tile
+        if (
+            destination &&
+            (window as ExtendedWindow).assignedTile &&
+            (window as ExtendedWindow).assignedTile?.x === destination.tile.x &&
+            (window as ExtendedWindow).assignedTile?.y === destination.tile.y &&
+            (window as ExtendedWindow).assignedTile?.width ===
+                destination.tile.width &&
+            (window as ExtendedWindow).assignedTile?.height ===
+                destination.tile.height
+        )
+            return true;
 
         // there isn't a tile near the window
         if (!destination) {
@@ -362,7 +376,9 @@ export class TilingManager {
             return false;
         }
 
-        if (!(window as ExtendedWindow).assignedTile && !window.get_maximized())
+        const isMaximized =
+            window.maximizedHorizontally || window.maximizedVertically;
+        if (!(window as ExtendedWindow).assignedTile && !isMaximized)
             (window as ExtendedWindow).originalSize = windowRectCopy;
 
         if (spanFlag) {
@@ -373,7 +389,7 @@ export class TilingManager {
             );
         }
 
-        if (window.get_maximized()) window.unmaximize(Meta.MaximizeFlags.BOTH);
+        if (isMaximized) window.unmaximize(Meta.MaximizeFlags.BOTH);
 
         this._easeWindowRect(window, destination.rect, false, force);
 

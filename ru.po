@@ -1,0 +1,569 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Naumov Stepan <st250492@yandex.ru>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-31 15:31+0100\n"
+"PO-Revision-Date: 2024-11-16 18:41+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.4\n"
+
+#: dist/prefs.js:664
+msgid "General"
+msgstr "Общие"
+
+#: dist/prefs.js:669
+msgid "Appearance"
+msgstr "Внешний вид"
+
+#: dist/prefs.js:670
+msgid "Configure the appearance of Tiling Shell"
+msgstr "Настройка внешнего вида Tiling Shell"
+
+#: dist/prefs.js:675
+msgid "Show Indicator"
+msgstr "Показать индикатор"
+
+#: dist/prefs.js:676
+msgid "Whether to show the panel indicator"
+msgstr "Показывать индикатор на панели"
+
+#: dist/prefs.js:681
+msgid "Inner gaps"
+msgstr "Внутренние зазоры"
+
+#: dist/prefs.js:682
+msgid "Gaps between windows"
+msgstr "Промежутки между окнами"
+
+#: dist/prefs.js:687
+msgid "Outer gaps"
+msgstr "Внешние зазоры"
+
+#: dist/prefs.js:688
+msgid "Gaps between a window and the monitor borders"
+msgstr "Промежутки между окном и границами монитора"
+
+#: dist/prefs.js:692
+msgid "Blur (experimental feature)"
+msgstr "Размытие (экспериментальная функция)"
+
+#: dist/prefs.js:694
+msgid "Apply blur effect to Snap Assistant and tile previews"
+msgstr ""
+"Примените эффект размытия для предварительного просмотра ассистента укладки "
+"и плиток"
+
+#: dist/prefs.js:700
+msgid "Snap Assistant threshold"
+msgstr "Порог чувствительности ассистента укладки"
+
+#: dist/prefs.js:702
+msgid "Minimum distance from the Snap Assistant to the pointer to open it"
+msgstr ""
+"Минимальное расстояние от ассистента укладки до указателя мыши, для его "
+"вызова"
+
+#: dist/prefs.js:711
+msgid "Snap Assistant"
+msgstr "Ассистент укладки"
+
+#: dist/prefs.js:712
+msgid "Apply blur effect to Snap Assistant"
+msgstr "Примените эффект размытия к ассистенту укладки"
+
+#: dist/prefs.js:718
+msgid "Selected tile preview"
+msgstr "Предварительный просмотр выбранной плитки"
+
+#: dist/prefs.js:719
+msgid "Apply blur effect to selected tile preview"
+msgstr ""
+"Примените эффект размытия к выбранному фрагменту предварительного просмотра"
+
+#: dist/prefs.js:723
+msgid "Window border"
+msgstr "Граница окна"
+
+#: dist/prefs.js:724 dist/prefs.js:731
+msgid "Show a border around focused window"
+msgstr "Отображение границы вокруг сфокусированного окна"
+
+#: dist/prefs.js:730
+msgid "Enable"
+msgstr "Включить"
+
+#: dist/prefs.js:737
+msgid "Width"
+msgstr "Ширина"
+
+#: dist/prefs.js:738
+msgid "The size of the border"
+msgstr "Размер границы"
+
+#: dist/prefs.js:744
+msgid "Border color"
+msgstr "Цвет границы"
+
+#: dist/prefs.js:745
+msgid "Choose the color of the border"
+msgstr "Выберите цвет рамки"
+
+#: dist/prefs.js:751
+msgid "Animations"
+msgstr "Анимация"
+
+#: dist/prefs.js:752
+msgid "Customize animations"
+msgstr "Настройка анимации"
+
+#: dist/prefs.js:758
+msgid "Snap assistant animation time"
+msgstr "Время анимации ассистента укладки"
+
+#: dist/prefs.js:759
+msgid "The snap assistant animation time in milliseconds"
+msgstr "Время анимации ассистента укладки в миллисекундах"
+
+#: dist/prefs.js:767
+msgid "Tiles animation time"
+msgstr "Время анимации плиток"
+
+#: dist/prefs.js:768
+msgid "The tiles animation time in milliseconds"
+msgstr "Время анимации плиток в миллисекундах"
+
+#: dist/prefs.js:774
+msgid "Behaviour"
+msgstr "Поведение"
+
+#: dist/prefs.js:775
+msgid "Configure the behaviour of Tiling Shell"
+msgstr "Конфигурация поведение Tiling Shell"
+
+#: dist/prefs.js:780
+msgid "Enable Snap Assistant"
+msgstr "Включить ассистент укладки"
+
+#: dist/prefs.js:781
+msgid "Move the window on top of the screen to snap assist it"
+msgstr "Переместите окно в верхнюю часть экрана, чтобы помочь ему закрепится"
+
+#: dist/prefs.js:786
+msgid "Enable Tiling System"
+msgstr "Включить систему укладки плитки"
+
+#: dist/prefs.js:787
+msgid "Hold the activation key while moving a window to tile it"
+msgstr "Удерживая клавишу при перемещении окна, уложите его на плитки"
+
+#: dist/prefs.js:805
+msgid "Span multiple tiles"
+msgstr "Захватывать несколько плиток"
+
+#: dist/prefs.js:806
+msgid "Hold the activation key to span multiple tiles"
+msgstr "Удерживайте клавишу, чтобы захватить несколько фрагментов"
+
+#: dist/prefs.js:821
+msgid "Enable auto-resize of the complementing tiled windows"
+msgstr "Включите автоизменение размера дополнительных плиточных окон"
+
+#: dist/prefs.js:823
+msgid ""
+"When a tiled window is resized, auto-resize the other tiled windows near it"
+msgstr ""
+"При изменении размера окна, расположенного в виде плитки, автоматически "
+"изменяйте размер соседних окон"
+
+#: dist/prefs.js:829
+msgid "Restore window size"
+msgstr "Восстановить размер окна"
+
+#: dist/prefs.js:831
+msgid "Whether to restore the windows to their original size when untiled"
+msgstr "Восстанавливать исходный размер окон, даже если он не был задан"
+
+#: dist/prefs.js:837
+msgid "Add snap assistant and auto-tile buttons to window menu"
+msgstr "Добавьте кнопки «Ассистент укладки» и «Автоукладка» в меню окна"
+
+#: dist/prefs.js:839
+msgid ""
+"Add snap assistant and auto-tile buttons in the menu that shows up when you "
+"right click on a window title"
+msgstr ""
+"Добавьте кнопки «Ассистент укладки» и «Автоукладка» в контекстное меню окна"
+
+#: dist/prefs.js:844
+msgid "Screen Edges"
+msgstr "Границы экрана"
+
+#: dist/prefs.js:846
+msgid ""
+"Drag windows against the top, left and right screen edges to resize them"
+msgstr "Перемещайте окно вдоль границ экрана для корректировки размера окна"
+
+#: dist/prefs.js:860
+msgid "Drag against top edge to maximize window"
+msgstr "Проведите курсором по верхнему краю, чтобы развернуть окно"
+
+#: dist/prefs.js:861
+msgid "Drag windows against the top edge to maximize them"
+msgstr "Перетащите окна к верхнему краю, чтобы раскрыть их максимально"
+
+#: dist/prefs.js:870
+msgid "Quarter tiling activation area"
+msgstr "Зона активации четвертной плитки"
+
+#: dist/prefs.js:871
+#, javascript-format
+msgid "Activation area to trigger quarter tiling (% of the screen)"
+msgstr "Область активации открытия четвертной плитки (% of the screen)"
+
+#: dist/prefs.js:888
+msgid "Layouts"
+msgstr "Макеты"
+
+#: dist/prefs.js:889
+msgid "Configure the layouts of Tiling Shell"
+msgstr "Настройка макетов Tiling Shell"
+
+#: dist/prefs.js:893 dist/prefs.js:894
+msgid "Edit layouts"
+msgstr "Редактирование макетов"
+
+#: dist/prefs.js:895
+msgid "Open the layouts editor"
+msgstr "Открыть редактор макетов"
+
+#: dist/prefs.js:900 dist/prefs.js:901 dist/prefs.js:905
+msgid "Export layouts"
+msgstr "Экспорт макетов"
+
+#: dist/prefs.js:902
+msgid "Export layouts to a file"
+msgstr "Экспорт макетов в файл"
+
+#: dist/prefs.js:909 dist/prefs.js:966 dist/prefs.js:1253 dist/prefs.js:1311
+msgid "Cancel"
+msgstr "Отменить"
+
+#: dist/prefs.js:910 dist/prefs.js:1254
+msgid "Save"
+msgstr "Сохранить"
+
+#: dist/extension.js:4570
+msgid "Menu"
+msgstr "Меню"
+
+#: dist/extension.js:4577
+msgid "Info"
+msgstr "Справка"
+
+#: dist/prefs.js:957 dist/prefs.js:958
+msgid "Import layouts"
+msgstr "Импорт макетов"
+
+#: dist/prefs.js:959
+msgid "Import layouts from a file"
+msgstr "Импорт макетов из файла"
+
+#: dist/prefs.js:962
+msgid "Select layouts file"
+msgstr "Выберите файл макетов"
+
+#: dist/prefs.js:967 dist/prefs.js:1312
+msgid "Open"
+msgstr "Открыть"
+
+#: dist/prefs.js:1015 dist/prefs.js:1016
+msgid "Reset layouts"
+msgstr "Сброс макетов"
+
+#: dist/prefs.js:1017
+msgid "Bring back the default layouts"
+msgstr "Верните макеты по умолчанию"
+
+#: dist/prefs.js:1030
+msgid "Keybindings"
+msgstr "Сочетания клавиш"
+
+#: dist/prefs.js:1032
+msgid "Use hotkeys to perform actions on the focused window"
+msgstr "Используйте горячие клавиши для выполнения действий с окном"
+
+#: dist/prefs.js:1050
+msgid "Move window to right tile"
+msgstr "Переместить окно на правую плитку"
+
+#: dist/prefs.js:1052
+msgid "Move the focused window to the tile on its right"
+msgstr "Переместите сфокусированное окно на плитку справа от него"
+
+#: dist/prefs.js:1061
+msgid "Move window to left tile"
+msgstr "Переместить окно на левую плитку"
+
+#: dist/prefs.js:1062
+msgid "Move the focused window to the tile on its left"
+msgstr "Переместите сфокусированное окно на плитку слева от него"
+
+#: dist/prefs.js:1068
+msgid "Move window to tile above"
+msgstr "Переместить окно на плитку выше"
+
+#: dist/prefs.js:1069
+msgid "Move the focused window to the tile above"
+msgstr "Переместите сфокусированное окно на плитку выше"
+
+#: dist/prefs.js:1075
+msgid "Move window to tile below"
+msgstr "Переместить окно на плитку ниже"
+
+#: dist/prefs.js:1076
+msgid "Move the focused window to the tile below"
+msgstr "Переместите сфокусированное окно на плитку ниже"
+
+#: dist/prefs.js:1082
+msgid "Span window to right tile"
+msgstr "Расширить окно на правую плитку"
+
+#: dist/prefs.js:1083
+msgid "Span the focused window to the tile on its right"
+msgstr "Расширить сфокусированное окно на плитку справа"
+
+#: dist/prefs.js:1089
+msgid "Span window to left tile"
+msgstr "Расширить окно на левую плитку"
+
+#: dist/prefs.js:1090
+msgid "Span the focused window to the tile on its left"
+msgstr "Расширить сфокусированное окно на плитку слева"
+
+#: dist/prefs.js:1096
+msgid "Span window above"
+msgstr "Расширить окно вверх"
+
+#: dist/prefs.js:1097
+msgid "Span the focused window to the tile above"
+msgstr "Расширить сфокусированное окно на плитку выше"
+
+#: dist/prefs.js:1103
+msgid "Span window down"
+msgstr "Расширить окно вниз"
+
+#: dist/prefs.js:1104
+msgid "Span the focused window to the tile below"
+msgstr "Расширить сфокусированное окно на плитку ниже"
+
+#: dist/prefs.js:1110
+msgid "Span window to all tiles"
+msgstr "Расширить окно на все плитки"
+
+#: dist/prefs.js:1111
+msgid "Span the focused window to all the tiles"
+msgstr "Расширить сфокусированное окно на все плитки"
+
+#: dist/prefs.js:1117
+msgid "Untile focused window"
+msgstr "Вызов сфокусированного окна"
+
+#: dist/prefs.js:1125
+msgid "Move window to the center"
+msgstr "Переместить окно в центр"
+
+#: dist/prefs.js:1127
+msgid "Move the focused window to the center of the screen"
+msgstr "Переместите сфокусированное окно в центр экрана"
+
+#: dist/prefs.js:1136
+msgid "Focus window to the right"
+msgstr "Окно фокусировки справа"
+
+#: dist/prefs.js:1138
+msgid "Focus the window to the right of the current focused window"
+msgstr "Переместить фокус на окно справа от текущего"
+
+#: dist/prefs.js:1145
+msgid "Focus window to the left"
+msgstr "Окно фокусировки слева"
+
+#: dist/prefs.js:1146
+msgid "Focus the window to the left of the current focused window"
+msgstr "Переместить фокус на окно слева от текущего"
+
+#: dist/prefs.js:1152
+msgid "Focus window above"
+msgstr "Окно фокусировки вверху"
+
+#: dist/prefs.js:1153
+msgid "Focus the window above the current focused window"
+msgstr "Переместить фокус на окно над текущим"
+
+#: dist/prefs.js:1159
+msgid "Focus window below"
+msgstr "Окно фокусировки ниже"
+
+#: dist/prefs.js:1160
+msgid "Focus the window below the current focused window"
+msgstr "Переместить фокус на окно под текущим"
+
+#: dist/prefs.js:1187
+msgid "View and Customize all the Shortcuts"
+msgstr "Просмотр и настройка всех комбинаций"
+
+#: dist/prefs.js:1215 dist/prefs.js:1216
+msgid "View and Customize Shortcuts"
+msgstr "Просмотр и настройка ярлыков"
+
+#: dist/prefs.js:1237
+msgid "Import, export and reset"
+msgstr "Импорт, экспорт и сброс настроек"
+
+#: dist/prefs.js:1239
+msgid "Import, export and reset the settings of Tiling Shell"
+msgstr "Импорт, экспорт и сброс настроек Tiling Shell"
+
+#: dist/prefs.js:1244 dist/prefs.js:1245
+msgid "Export settings"
+msgstr "Параметры экспорта"
+
+#: dist/prefs.js:1246
+msgid "Export settings to a file"
+msgstr "Экспорт настроек в файл"
+
+#: dist/prefs.js:1249
+msgid "Export settings to a text file"
+msgstr "Экспорт настроек в текстовый файл"
+
+#: dist/prefs.js:1302 dist/prefs.js:1303
+msgid "Import settings"
+msgstr "Импорт настроек"
+
+#: dist/prefs.js:1304
+msgid "Import settings from a file"
+msgstr "Импорт настроек из файла"
+
+#: dist/prefs.js:1307
+msgid "Select a text file to import from"
+msgstr "Выберите текстовый файл для импорта"
+
+#: dist/prefs.js:1351 dist/prefs.js:1352
+msgid "Reset settings"
+msgstr "Сброс настроек"
+
+#: dist/prefs.js:1353
+msgid "Bring back the default settings"
+msgstr "Вернуть настройки по умолчанию"
+
+#: dist/prefs.js:1368
+msgid "Donate on ko-fi"
+msgstr "Пожертвуйте на ko-fi"
+
+#: dist/prefs.js:1374
+msgid "Report a bug"
+msgstr "Сообщить об ошибке"
+
+#: dist/prefs.js:1380
+msgid "Request a feature"
+msgstr "Запросить функцию"
+
+#: dist/prefs.js:1388
+msgid "Have issues, you want to suggest a new feature or contribute?"
+msgstr ""
+"У вас возникли проблемы, вы хотите предложить новую функцию или внести свой "
+"вклад?"
+
+#: dist/prefs.js:1395
+msgid "Open a new issue on"
+msgstr "Откройте новый запрос на"
+
+#: dist/extension.js:4500
+msgid "Edit Layouts"
+msgstr "Редактор макетов"
+
+#: dist/extension.js:4510
+msgid "New Layout"
+msgstr "Новый макет"
+
+#: dist/extension.js:4691
+msgid "to split a tile"
+msgstr "- разделить по горизонтали"
+
+#: dist/extension.js:4730
+msgid "to split a tile vertically"
+msgstr "- разделить по вертикали"
+
+#: dist/extension.js:4750
+msgid "to delete a tile"
+msgstr "- удалить плитку"
+
+#: dist/extension.js:4775
+msgid "use the indicator button to save or cancel"
+msgstr "- меню, справка, сохранение, отмена"
+
+#: dist/prefs.js:815
+msgid "Enable Auto Tiling"
+msgstr "Включить автоматическую укладку плитки"
+
+#: dist/prefs.js:816
+msgid "Automatically tile new windows to the best tile"
+msgstr "Автоматически укладывать новые окна на лучшую плитку"
+
+#: dist/prefs.js:795
+msgid "Tiling System deactivation key"
+msgstr "Клавиша отключения системы укладки плитки"
+
+#: dist/prefs.js:797
+msgid ""
+"Hold the deactivation key while moving a window to deactivate the tiling "
+"system"
+msgstr ""
+"Удерживая клавишу при перемещении окна, отключите систему укладки плитки"
+
+#: dist/extension.js:5614
+msgid "Move to best tile"
+msgstr "Переместить на плитку"
+
+#: dist/extension.js:5634
+msgid "Move to leftmost tile"
+msgstr "Переместить на плитку"
+
+#: dist/extension.js:5653
+msgid "Move to rightmost tile"
+msgstr "Переместить на плитку"
+
+#: dist/prefs.js:1691
+msgid "New accelerator\\u2026"
+msgstr "Новая комбинация клавиш\\u2026"
+
+#: dist/prefs.js:1717
+msgid "Use Backspace to clear"
+msgstr "Используйте Backspace для очистки"
+
+#: dist/extension.js:4793
+msgid "Start editing"
+msgstr "Начать редактирование"
+
+#: dist/extension.js:4656
+msgid "Close"
+msgstr "Отмена"
+
+#: dist/extension.js:4636
+msgid "Select the layout to edit"
+msgstr "Выберите макет для редактирования"
+
+#: dist/extension.js:4785
+msgid "How to use the editor"
+msgstr "Инструкция"
